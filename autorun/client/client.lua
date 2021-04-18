@@ -59,12 +59,19 @@ function SPAWN_MENU:Open_Editor()
 	self.list:AddColumn("Scale")
 	self.list:AddColumn("NPC")
 	self.list:AddColumn("Weapon")
+	self.list:AddColumn("Max")
+	self.list:AddColumn("Type")
+	self.list:AddColumn("Explode?")
 	self.list.OnRowRightClick = function ( pnl, num )
 	    local MenuButtonOptions = DermaMenu()
 	    MenuButtonOptions:AddOption("Delete Row", function() 
 	    	self.list:RemoveLine(num) 
 	    	table.remove(zombie_list, num) 
 	    	self:update_table()
+	    	if LocalPlayer():IsSuperAdmin() then
+	    		self.panel:Close()
+				SPAWN_MENU:Open_Editor() 
+			end
 	    end)
 	    MenuButtonOptions:AddOption("Edit...", function() self:zlist_edit_row(num) end )
 	    MenuButtonOptions:Open()
@@ -88,7 +95,7 @@ function SPAWN_MENU:add_line(data, id)
 		data["weapon"] = "None"
 	end	
 
-	self.list:AddLine(id, data["health"], data["chance"], data["model"], data["scale"], data["class_name"], data["weapon"])
+	self.list:AddLine(id, data["health"], data["chance"], data["model"], data["scale"], data["class_name"], data["weapon"], data["max"], data["type"], data["explode"])
 end
 
 function SPAWN_MENU:disable_edit(bool)
@@ -96,6 +103,9 @@ function SPAWN_MENU:disable_edit(bool)
 	self.editTab.chance:SetDisabled(bool)
 	self.editTab.model:SetDisabled(bool)
 	self.editTab.scale:SetDisabled(bool)
+	self.editTab.max:SetDisabled(bool)
+	self.editTab.type:SetDisabled(bool)
+	self.editTab.explode:SetDisabled(bool)
 	self.editTab.npc:SetDisabled(bool)
 	self.editTab.weapon:SetDisabled(bool)
 	self.editTab.button:SetDisabled(bool)
@@ -107,6 +117,7 @@ function SPAWN_MENU:disable_edit(bool)
 	self.editTab.chance:SetEditable(!bool)
 	self.editTab.model:SetEditable(!bool)
 	self.editTab.scale:SetEditable(!bool)
+	self.editTab.max:SetEditable(!bool)
 	self.editTab.npc:SetEditable(!bool)
 	self.editTab.weapon:SetEditable(!bool)
 end
@@ -118,6 +129,9 @@ function SPAWN_MENU:apply_edit()
 	zombie_list[self.editing]["scale"] = self.editTab.scale:GetValue()
 	zombie_list[self.editing]["class_name"] = self.editTab.npc:GetValue()
 	zombie_list[self.editing]["weapon"] = self.editTab.weapon:GetValue()
+	zombie_list[self.editing]["max"] = self.editTab.max:GetValue()
+	zombie_list[self.editing]["type"] = self.editTab.type:GetValue()
+	zombie_list[self.editing]["explode"] = tostring(self.editTab.explode:GetChecked())
 	self.list:RemoveLine(self.editing)
 	self:add_line(table.Copy(zombie_list[self.editing]), self.editing)
 	self.editing = nil
@@ -134,6 +148,10 @@ function SPAWN_MENU:apply_add()
 	new["scale"] = self.addTab.scale:GetValue()
 	new["class_name"] = self.addTab.npc:GetValue()
 	new["weapon"] = self.addTab.weapon:GetValue()
+	new["max"] = self.addTab.max:GetValue()
+	new["type"] = self.addTab.type:GetValue()
+	new["explode"] = tostring(self.addTab.explode:GetChecked())
+	
 	table.insert(zombie_list, new)
 	self:add_line(table.Copy(new), table.Count(zombie_list))
 	self:update_table()
@@ -173,6 +191,8 @@ function SPAWN_MENU:draw_options(tabnum)
 	tab.healthlabel:SizeToContents()
 	tab.health = vgui.Create("DNumberWang", tab)
 	tab.health:SetPos(60,10)
+	tab.health:SetMin(-1)
+	tab.health:SetValue(-1)
 
 	--Chance
 	tab.chancelabel = vgui.Create("DLabel", tab)
@@ -250,6 +270,38 @@ function SPAWN_MENU:draw_options(tabnum)
 	tab.weapon = vgui.Create("DTextEntry", tab)
 	tab.weapon:SetPos(250,145)
 	tab.weapon:SetWide(300)
+
+	--Max NPCs
+	tab.maxLabel = vgui.Create("DLabel", tab)
+	tab.maxLabel:SetPos(10,85)
+	tab.maxLabel:SetText("Max:")
+	tab.maxLabel:SizeToContents()
+	tab.max = vgui.Create("DNumberWang", tab)
+	tab.max:SetPos(60,85)
+	tab.max:SetValue(10)
+	tab.max:SetMin(0)
+
+	--Type
+	tab.typeLabel = vgui.Create("DLabel", tab)
+	tab.typeLabel:SetPos(10,110)
+	tab.typeLabel:SetText("Chase?")
+	tab.typeLabel:SizeToContents()
+	tab.type = vgui.Create("DComboBox", tab)
+	tab.type:SetPos(60,110)
+	tab.type:SetWide(100)
+	tab.type:SetValue("Chaser")
+	tab.type:AddChoice("Chaser")
+	tab.type:AddChoice("Roamer")
+	tab.type:AddChoice("None")
+
+	--Explode
+	tab.explodeLabel = vgui.Create("DLabel", tab)
+	tab.explodeLabel:SetPos(10,135)
+	tab.explodeLabel:SetText("Explode?")
+	tab.explodeLabel:SizeToContents()
+	tab.explode = vgui.Create("DCheckBox", tab)
+	tab.explode:SetPos(60,135)
+	tab.explode:SetValue(0)
 end
 
 function SPAWN_MENU:zlist_edit_row(num)
@@ -264,6 +316,9 @@ function SPAWN_MENU:zlist_edit_row(num)
 	self.editTab.scale:SetText(zombie_list[num]["scale"])
 	self.editTab.npc:SetText(zombie_list[num]["class_name"])
 	self.editTab.weapon:SetText(zombie_list[num]["weapon"])
+	self.editTab.max:SetText(zombie_list[num]["max"])
+	self.editTab.type:SetText(zombie_list[num]["type"])
+	self.editTab.explode:SetValue(zombie_list[num]["explode"])
 end
 
 function SPAWN_MENU:update_table()
@@ -293,38 +348,6 @@ function OnPopulateSettingsPanel(panel)
 		if LocalPlayer():IsSuperAdmin() then
 			net.Start("zinv_changecvar")
 			net.WriteString("zinv")
-			net.WriteFloat(self:GetChecked()==true and 1 or 0)
-			net.SendToServer()
-		else
-			chat.AddText(Color(255,62,62), "WARNING: ", Color(255,255,255), "You must be a super-admin to change this option.")
-			chat.PlaySound()
-		end			
-	end
-
-	local p = panel:AddControl("CheckBox", {
-		Label = "Exploded On Death?"
-	})
-	p:SetValue( GetConVarNumber( "zinv_explode" ) )
-	p.OnChange = function(self)
-		if LocalPlayer():IsSuperAdmin() then
-			net.Start("zinv_changecvar")
-			net.WriteString("zinv_explode")
-			net.WriteFloat(self:GetChecked()==true and 1 or 0)
-			net.SendToServer()
-		else
-			chat.AddText(Color(255,62,62), "WARNING: ", Color(255,255,255), "You must be a super-admin to change this option.")
-			chat.PlaySound()
-		end			
-	end
-
-	local p = panel:AddControl("CheckBox", {
-		Label = "Chase Players?"
-	})
-	p:SetValue( GetConVarNumber( "zinv_chaseplayers" ) )
-	p.OnChange = function(self)
-		if LocalPlayer():IsSuperAdmin() then
-			net.Start("zinv_changecvar")
-			net.WriteString("zinv_chaseplayers")
 			net.WriteFloat(self:GetChecked()==true and 1 or 0)
 			net.SendToServer()
 		else
@@ -367,29 +390,6 @@ function OnPopulateSettingsPanel(panel)
 		if LocalPlayer():IsSuperAdmin() then
 			net.Start("zinv_changecvar")
 			net.WriteString("zinv_maxdist")
-			net.WriteFloat(self:GetValue())
-			net.SendToServer()
-		else
-			chat.AddText(Color(255,62,62), "WARNING: ", Color(255,255,255), "You must be a super-admin to change this option.")
-			chat.PlaySound()
-		end			
-	end
-
-	panel:AddControl("Label", {
-		Text = "NPCs will not spawn past this distance and if they are further away they will de-spawn."
-	})
-
-	local p = panel:AddControl("Slider", {
-		Label = "Maximum NPCs Allowed",
-		Type = "Long",
-		Min = "0",
-		Max = "300",
-	})
-	p:SetValue( GetConVarNumber( "zinv_maxspawn" ) )
-	p.OnValueChanged = function(self)
-		if LocalPlayer():IsSuperAdmin() then
-			net.Start("zinv_changecvar")
-			net.WriteString("zinv_maxspawn")
 			net.WriteFloat(self:GetValue())
 			net.SendToServer()
 		else

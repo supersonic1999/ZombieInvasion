@@ -17,6 +17,9 @@ default_settings = [[
 		"scale"			"1"
 		"class_name"		"npc_zombie"
 		"weapon"		""
+		"max"			"10"
+		"type"			"Chaser"
+		"explode"		"true"
 	}
 	"2"
 	{
@@ -26,6 +29,9 @@ default_settings = [[
 		"scale"			"1"
 		"class_name"		"npc_fastzombie"
 		"weapon"		""
+		"max"			"10"
+		"type"			"Chaser"
+		"explode"		"false"
 	}
 	"3"
 	{
@@ -35,11 +41,15 @@ default_settings = [[
 		"scale"			"1"
 		"class_name"		"npc_headcrab_fast"
 		"weapon"		""
+		"max"			"10"
+		"type"			"Chaser"
+		"explode"		"false"
 	}
 }]]
 
 hook.Add("OnNPCKilled","NPC_Died_zinv", function(victim, killer, weapon)
-	if GetConVarNumber("zinv_explode") == 0 then
+	local class = classSettings(victim:GetClass())
+	if !class or class["explode"] != "true" then
 		return
 	end
 
@@ -172,7 +182,7 @@ function ParseFile()
 	end
 end
 
-timer.Create("zombietimer_zinv", 5, 0, function()
+timer.Create("zombietimer_zinv", 1, 0, function()
 	local status, err = pcall( function()
 	local valid_nodes = {}
 	local zombies = {}
@@ -225,22 +235,22 @@ timer.Create("zombietimer_zinv", 5, 0, function()
 		if closest > GetConVarNumber("zinv_maxdist")*1.25 then
 			v:Remove()
 		else
-			if GetConVarNumber("zinv_chaseplayers") != 0 then
+			local class = classSettings(v:GetClass())
+			if !class or v.Base == "base_nextbot" then
+				continue
+			end
+			if class["type"] == "Chaser" then
 				v:SetLastPosition(closest_plr:GetPos())
 				v:SetTarget(closest_plr)
-				if !v:IsCurrentSchedule(SCHED_FORCED_GO_RUN) then
-					v:SetSchedule(SCHED_FORCED_GO_RUN)
+				if !v:IsCurrentSchedule(SCHED_TARGET_CHASE) then
+					v:SetSchedule(SCHED_TARGET_CHASE)
+				end
+			elseif class["type"] == "Roamer" then
+				if !v:IsCurrentSchedule(SCHED_RUN_RANDOM) and v:IsCurrentSchedule(SCHED_IDLE_STAND) then
+					v:SetSchedule(SCHED_RUN_RANDOM)
 				end
 			end
 		end
-	end
-
-	for k, v in pairs(zombie_list) do
-		local zombies = table.Add(zombies, ents.FindByClass(v["class_name"]))
-	end
-
-	if table.Count(zombies) >= GetConVarNumber("zinv_maxspawn") then
-		return
 	end
 
 	--Get valid nodes
@@ -276,16 +286,16 @@ timer.Create("zombietimer_zinv", 5, 0, function()
 	end
 
 	--Spawn zombies if not enough
-	if table.Count(valid_nodes) > 0 then
-		for i = 0, 5 do
-			if table.Count(zombies)+i < GetConVarNumber("zinv_maxspawn") then
+	for k, v in pairs(zombie_list) do
+		local c = table.Count(ents.FindByClass(v["class_name"]))
+		if c < v["max"] then
+			local loopmax = math.min(5, v["max"]-c)
+			for i = 0, loopmax-1 do
 				local pos = table.Random(valid_nodes) 
 				if pos != nil then
 					table.RemoveByValue(valid_nodes, pos)
-					spawn_zombie(pos + Vector(0,0,30))
+					spawn_zombie(v, pos + Vector(0,0,30))
 				end
-			else
-				break
 			end
 		end
 	end
@@ -296,19 +306,17 @@ timer.Create("zombietimer_zinv", 5, 0, function()
 	end
 end)
 
-function spawn_zombie(pos)
-	--Pick random NPC based on chance
-	local rnum = math.random(0, total_chance)
-	local total = 0
-
+--returns false if classStr not in zombie_list, returns the entry if found
+function classSettings(classStr)
 	for k, v in pairs(zombie_list) do
-		total = total + v["chance"]
-		if total >= rnum then
-			z_class = v
-			break
+		if v["class_name"] == tostring(classStr) then
+			return v
 		end
 	end
+	return false
+end
 
+function spawn_zombie(z_class, pos)
 	--Spawn NPC
 	if z_class then
 		local zombie = ents.Create(z_class["class_name"])
@@ -329,7 +337,7 @@ function spawn_zombie(pos)
    				zombie:SetHealth(z_class["health"])
    				zombie:SetMaxHealth(z_class["health"])
    			end
-   			zombie:Activate()
+   			zombie:Activate()			
 		end
 	end
 end

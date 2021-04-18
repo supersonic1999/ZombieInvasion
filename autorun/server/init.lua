@@ -300,6 +300,7 @@ function spawn_zombie(pos)
 	--Pick random NPC based on chance
 	local rnum = math.random(0, total_chance)
 	local total = 0
+
 	for k, v in pairs(zombie_list) do
 		total = total + v["chance"]
 		if total >= rnum then
@@ -335,6 +336,7 @@ end
 
 function load_npc_info()
 	zombie_list = {}
+	total_chance = 0
 	local f = file.Read("zinv_settings.txt", "DATA")
 	if f then
 		Settings = util.KeyValuesToTable(f)
@@ -387,6 +389,7 @@ net.Receive("send_ztable_sr", function(len, pl)
 	if pl:IsValid() and pl:IsPlayer() and pl:IsSuperAdmin() then
 		zombie_list = net.ReadTable()
 		file.Write("zinv_settings.txt", util.TableToKeyValues(zombie_list)) 
+		load_npc_info()
 		print("ZINV: NPC waves edit by: "..pl:Nick())
 	end
 end)

@@ -391,5 +391,6 @@ net.Receive("send_ztable_sr", function(len, pl)
 		file.Write("zinv_settings.txt", util.TableToKeyValues(zombie_list)) 
 		load_npc_info()
 		print("ZINV: NPC waves edit by: "..pl:Nick())
+		
 	end
 end)

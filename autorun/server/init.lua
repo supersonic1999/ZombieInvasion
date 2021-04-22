@@ -291,6 +291,9 @@ timer.Create("zombietimer_zinv", 1, 0, function()
 		if c < v["max"] then
 			local loopmax = math.min(5, v["max"]-c)
 			for i = 0, loopmax-1 do
+				if (v["chance"]/100.0) <= math.Rand(0, 1) then
+					continue
+				end
 				local pos = table.Random(valid_nodes) 
 				if pos != nil then
 					table.RemoveByValue(valid_nodes, pos)

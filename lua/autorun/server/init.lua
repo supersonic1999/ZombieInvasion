@@ -216,7 +216,7 @@ timer.Create("zombietimer_zinv", 1, 0, function()
 	for k, v in pairs(zombie_list) do
 		local zombies = table.Add(zombies, ents.FindByClass(v["class_name"]))
 	end
-
+	
 	--Check zombie
 	for k, v in pairs(zombies) do
 		local closest = -1
@@ -256,6 +256,10 @@ timer.Create("zombietimer_zinv", 1, 0, function()
 	--Get valid nodes
 	for k, v in pairs(Nodes) do
 		local valid = false
+
+		if table.Count(valid_nodes) >= 50*table.Count(player.GetAll()) then
+			break
+		end
 
 		for k2, v2 in pairs(player.GetAll()) do
 			local dist = v["pos"]:Distance(v2:GetPos())

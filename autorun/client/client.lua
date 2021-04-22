@@ -197,12 +197,14 @@ function SPAWN_MENU:draw_options(tabnum)
 	--Chance
 	tab.chancelabel = vgui.Create("DLabel", tab)
 	tab.chancelabel:SetPos(10,35)
-	tab.chancelabel:SetText("Chance:")
+	tab.chancelabel:SetText("Chance %:")
 	tab.chancelabel:SizeToContents()
 	tab.chance = vgui.Create("DNumberWang", tab)
+	tab.chance:SetDecimals(5)
 	tab.chance:SetPos(60,35)
 	tab.chance:SetValue(100)
-	tab.chance:SetMin(1)
+	tab.chance:SetMin(0.1)
+	tab.chance:SetMax(100)
 
 	--Scale
 	tab.scalelabel = vgui.Create("DLabel", tab)

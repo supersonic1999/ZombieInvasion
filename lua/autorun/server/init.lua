@@ -182,7 +182,7 @@ function ParseFile()
 	end
 end
 
-timer.Create("zombietimer_zinv", 1, 0, function()
+timer.Create("zombietimercheck_zinv", 10, 0, function()
 	local status, err = pcall( function()
 	local valid_nodes = {}
 	local zombies = {}
@@ -241,6 +241,7 @@ timer.Create("zombietimer_zinv", 1, 0, function()
 			end
 			if class["type"] == "Chaser" then
 				v:SetLastPosition(closest_plr:GetPos())
+				v:SetSaveValue("m_vecLastPosition", closest_plr:GetPos())
 				v:SetTarget(closest_plr)
 				if !v:IsCurrentSchedule(SCHED_TARGET_CHASE) then
 					v:SetSchedule(SCHED_TARGET_CHASE)
@@ -253,6 +254,48 @@ timer.Create("zombietimer_zinv", 1, 0, function()
 		end
 	end
 
+	end)
+
+	if !status then
+		print(err)
+	end
+end)
+
+timer.Create("zombietimer_zinv", 1, 0, function()
+	local status, err = pcall( function()
+	local valid_nodes = {}
+	local zombies = {}
+
+	if GetConVarNumber("zinv") == 0 or table.Count(player.GetAll()) <= 0 then
+		return
+	end
+	
+	if !found_ain then
+		ParseFile()
+	end
+
+	if GetConVarNumber("zinv_maxdist") < GetConVarNumber("zinv_mindist") then
+		print("ZINV: Zombies cannot spawn! Max spawn distance is less than Min!")
+	end
+
+	if !zombie_list then
+		print("ZINV: Error with zombie_list")
+		return
+	end
+
+	if !Nodes or table.Count(Nodes) < 1 then
+		print("ZINV: No info_node(s) in map! NPCs will not spawn.")
+		return
+	end
+
+	if table.Count(Nodes) <= 35 then
+		print("ZINV: Zombies may not spawn well on this map, please try another.")
+	end
+
+	for k, v in pairs(zombie_list) do
+		local zombies = table.Add(zombies, ents.FindByClass(v["class_name"]))
+	end
+	
 	--Get valid nodes
 	for k, v in pairs(Nodes) do
 		local valid = false

@@ -53,18 +53,18 @@ function SPAWN_MENU:Open_Editor()
 	self.list:SetSize(680,200) --W, H
 	self.list:SetMultiSelect(false)
 	self.list:AddColumn("ID")
-	self.list:AddColumn("Health")
-	self.list:AddColumn("Chance")
-	self.list:AddColumn("Model")
-	self.list:AddColumn("Scale")
-	self.list:AddColumn("NPC")
-	self.list:AddColumn("Weapon")
-	self.list:AddColumn("Max")
-	self.list:AddColumn("Type")
-	self.list:AddColumn("Explode?")
+	self.list:AddColumn(language.GetPhrase("zinv.health"))
+	self.list:AddColumn(language.GetPhrase("zinv.chance"))
+	self.list:AddColumn(language.GetPhrase("zinv.model"))
+	self.list:AddColumn(language.GetPhrase("zinv.scale"))
+	self.list:AddColumn(language.GetPhrase("zinv.npc"))
+	self.list:AddColumn(language.GetPhrase("zinv.weapon"))
+	self.list:AddColumn(language.GetPhrase("zinv.max"))
+	self.list:AddColumn(language.GetPhrase("zinv.type"))
+	self.list:AddColumn(language.GetPhrase("zinv.explode"))
 	self.list.OnRowRightClick = function ( pnl, num )
 	    local MenuButtonOptions = DermaMenu()
-	    MenuButtonOptions:AddOption("Delete Row", function() 
+	    MenuButtonOptions:AddOption(language.GetPhrase("zinv.deleterow"), function() 
 	    	self.list:RemoveLine(num) 
 	    	table.remove(zombie_list, num) 
 	    	self:update_table()
@@ -73,7 +73,7 @@ function SPAWN_MENU:Open_Editor()
 				SPAWN_MENU:Open_Editor() 
 			end
 	    end)
-	    MenuButtonOptions:AddOption("Edit...", function() self:zlist_edit_row(num) end )
+	    MenuButtonOptions:AddOption(language.GetPhrase("zinv.edit").."...", function() self:zlist_edit_row(num) end )
 	    MenuButtonOptions:Open()
 	end
 
@@ -135,7 +135,7 @@ function SPAWN_MENU:apply_edit()
 	self.list:RemoveLine(self.editing)
 	self:add_line(table.Copy(zombie_list[self.editing]), self.editing)
 	self.editing = nil
-	self.editTab.editlabel:SetText("Editing: nil")
+	self.editTab.editlabel:SetText(language.GetPhrase("zinv.editing")..": nil")
 	self:disable_edit(true)
 	self:update_table()
 end
@@ -164,7 +164,7 @@ function SPAWN_MENU:draw_options(tabnum)
 		tab.button = vgui.Create( "DButton", tab )
 		tab.button:SetSize( 100, 30 )
 		tab.button:SetPos( 560, 170)
-		tab.button:SetText( "Add" )
+		tab.button:SetText( language.GetPhrase("zinv.add") )
 		tab.button.DoClick = function( button )
 			self:apply_add()
 		end
@@ -172,13 +172,13 @@ function SPAWN_MENU:draw_options(tabnum)
 		tab = self.editTab
 		tab.editlabel = vgui.Create("DLabel", tab)
 		tab.editlabel:SetPos(10, 190)
-		tab.editlabel:SetText("Editing: "..tostring(self.editing))
+		tab.editlabel:SetText(language.GetPhrase("zinv.editing")..": "..tostring(self.editing))
 		tab.editlabel:SizeToContents()
 
 		tab.button = vgui.Create( "DButton", tab )
 		tab.button:SetSize( 100, 30 )
 		tab.button:SetPos( 560, 170)
-		tab.button:SetText( "Update" )
+		tab.button:SetText( language.GetPhrase("zinv.update") )
 		tab.button.DoClick = function( button )
 			self:apply_edit()
 		end
@@ -187,7 +187,7 @@ function SPAWN_MENU:draw_options(tabnum)
 	--Health
 	tab.healthlabel = vgui.Create("DLabel", tab)
 	tab.healthlabel:SetPos(10,10)
-	tab.healthlabel:SetText("Health:")
+	tab.healthlabel:SetText(language.GetPhrase("zinv.health")..":")
 	tab.healthlabel:SizeToContents()
 	tab.health = vgui.Create("DNumberWang", tab)
 	tab.health:SetPos(60,10)
@@ -197,7 +197,7 @@ function SPAWN_MENU:draw_options(tabnum)
 	--Chance
 	tab.chancelabel = vgui.Create("DLabel", tab)
 	tab.chancelabel:SetPos(10,35)
-	tab.chancelabel:SetText("Chance %:")
+	tab.chancelabel:SetText(language.GetPhrase("zinv.chance").." %:")
 	tab.chancelabel:SizeToContents()
 	tab.chance = vgui.Create("DNumberWang", tab)
 	tab.chance:SetDecimals(5)
@@ -209,7 +209,7 @@ function SPAWN_MENU:draw_options(tabnum)
 	--Scale
 	tab.scalelabel = vgui.Create("DLabel", tab)
 	tab.scalelabel:SetPos(10,60)
-	tab.scalelabel:SetText("Scale:")
+	tab.scalelabel:SetText(language.GetPhrase("zinv.Scale")..":")
 	tab.scalelabel:SizeToContents()
 	tab.scale = vgui.Create("DNumberWang", tab)
 	tab.scale:SetPos(60,60)
@@ -219,7 +219,7 @@ function SPAWN_MENU:draw_options(tabnum)
 	--Model
 	tab.modellabel = vgui.Create("DLabel", tab)
 	tab.modellabel:SetPos(200,10)
-	tab.modellabel:SetText("Model:")
+	tab.modellabel:SetText(language.GetPhrase("zinv.model")..":")
 	tab.modellabel:SizeToContents()
 	tab.modeldrop = vgui.Create("DComboBox", tab)
 	tab.modeldrop:SetPos(250,10)
@@ -238,7 +238,7 @@ function SPAWN_MENU:draw_options(tabnum)
 	--NPC
 	tab.npclabel = vgui.Create("DLabel", tab)
 	tab.npclabel:SetPos(200,65)
-	tab.npclabel:SetText("NPC:")
+	tab.npclabel:SetText(language.GetPhrase("zinv.npc")..":")
 	tab.npclabel:SizeToContents()
 	tab.npcdrop = vgui.Create("DComboBox", tab)
 	tab.npcdrop:SetPos(250,65)
@@ -257,7 +257,7 @@ function SPAWN_MENU:draw_options(tabnum)
 	--Weapon
 	tab.weaponlabel = vgui.Create("DLabel", tab)
 	tab.weaponlabel:SetPos(200,120)
-	tab.weaponlabel:SetText("Weapon:")
+	tab.weaponlabel:SetText(language.GetPhrase("zinv.weapon")..":")
 	tab.weaponlabel:SizeToContents()
 	tab.weapondrop = vgui.Create("DComboBox", tab)
 	tab.weapondrop:SetPos(250,120)
@@ -276,7 +276,7 @@ function SPAWN_MENU:draw_options(tabnum)
 	--Max NPCs
 	tab.maxLabel = vgui.Create("DLabel", tab)
 	tab.maxLabel:SetPos(10,85)
-	tab.maxLabel:SetText("Max:")
+	tab.maxLabel:SetText(language.GetPhrase("zinv.max")..":")
 	tab.maxLabel:SizeToContents()
 	tab.max = vgui.Create("DNumberWang", tab)
 	tab.max:SetPos(60,85)
@@ -286,7 +286,7 @@ function SPAWN_MENU:draw_options(tabnum)
 	--Type
 	tab.typeLabel = vgui.Create("DLabel", tab)
 	tab.typeLabel:SetPos(10,110)
-	tab.typeLabel:SetText("Chase?")
+	tab.typeLabel:SetText(language.GetPhrase("zinv.chaser").."?")
 	tab.typeLabel:SizeToContents()
 	tab.type = vgui.Create("DComboBox", tab)
 	tab.type:SetPos(60,110)
@@ -299,7 +299,7 @@ function SPAWN_MENU:draw_options(tabnum)
 	--Explode
 	tab.explodeLabel = vgui.Create("DLabel", tab)
 	tab.explodeLabel:SetPos(10,135)
-	tab.explodeLabel:SetText("Explode?")
+	tab.explodeLabel:SetText(language.GetPhrase("zinv.explode").."?")
 	tab.explodeLabel:SizeToContents()
 	tab.explode = vgui.Create("DCheckBox", tab)
 	tab.explode:SetPos(60,135)
@@ -309,7 +309,7 @@ end
 function SPAWN_MENU:zlist_edit_row(num)
 	self.editing = num
 	self:disable_edit(false)
-	self.editTab.editlabel:SetText("Editing: "..tostring(self.editing))
+	self.editTab.editlabel:SetText(language.GetPhrase("zinv.editing")..": "..tostring(self.editing))
 	self.psheet:SetActiveTab(self.tab2.Tab)
 
 	self.editTab.health:SetText(zombie_list[num]["health"])
@@ -343,7 +343,7 @@ end)
 
 function OnPopulateSettingsPanel(panel)
 	local p = panel:AddControl("CheckBox", {
-		Label = "Enabled?"
+		Label = language.GetPhrase("zinv.enabled") .. "?"
 	})
 	p:SetValue( GetConVarNumber( "zinv" ) )
 	p.OnChange = function(self)
@@ -353,13 +353,13 @@ function OnPopulateSettingsPanel(panel)
 			net.WriteFloat(self:GetChecked()==true and 1 or 0)
 			net.SendToServer()
 		else
-			chat.AddText(Color(255,62,62), "WARNING: ", Color(255,255,255), "You must be a super-admin to change this option.")
+			chat.AddText(Color(255,62,62), "WARNING: ", Color(255,255,255), language.GetPhrase("zinv.bSuperAdmin"))
 			chat.PlaySound()
 		end			
 	end
 
 	local p = panel:AddControl("Slider", {
-		Label = "Minimum Spawn Distance",
+		Label = language.GetPhrase("zinv.minspawndist"),
 		Type = "Long",
 		Min = "0",
 		Max = "20000"
@@ -372,17 +372,17 @@ function OnPopulateSettingsPanel(panel)
 			net.WriteFloat(self:GetValue())
 			net.SendToServer()
 		else
-			chat.AddText(Color(255,62,62), "WARNING: ", Color(255,255,255), "You must be a super-admin to change this option.")
+			chat.AddText(Color(255,62,62), "WARNING: ", Color(255,255,255), language.GetPhrase("zinv.bSuperAdmin"))
 			chat.PlaySound()
 		end			
 	end
 
 	panel:AddControl("Label", {
-		Text = "NPCs must be this far away from any player to spawn."
+		Text = language.GetPhrase("zinv.minspawndistlabel")
 	})
 
 	local p = panel:AddControl("Slider", {
-		Label = "Maximum Spawn Distance",
+		Label = language.GetPhrase("zinv.maxspawndist"),
 		Type = "Long",
 		Min = "0",
 		Max = "20000",
@@ -395,7 +395,7 @@ function OnPopulateSettingsPanel(panel)
 			net.WriteFloat(self:GetValue())
 			net.SendToServer()
 		else
-			chat.AddText(Color(255,62,62), "WARNING: ", Color(255,255,255), "You must be a super-admin to change this option.")
+			chat.AddText(Color(255,62,62), "WARNING: ", Color(255,255,255), language.GetPhrase("zinv.bSuperAdmin"))
 			chat.PlaySound()
 		end			
 	end
@@ -405,14 +405,14 @@ function OnPopulateSettingsPanel(panel)
 	})
 
 	local p = panel:AddControl("Button", {
-		Label = "Spawn Editor",
+		Label = language.GetPhrase( "zinv.spawneditor" ),
 		Command = ""
 	})
 	p.DoClick = function() 
 		if LocalPlayer():IsSuperAdmin() then
 			SPAWN_MENU:Open_Editor() 
 		else
-			chat.AddText(Color(255,62,62), "WARNING: ", Color(255,255,255), "You must be a super-admin to change this option.")
+			chat.AddText(Color(255,62,62), "WARNING: ", Color(255,255,255), language.GetPhrase( "zinv.bSuperAdmin" ))
 			chat.PlaySound()
 		end			
 	end

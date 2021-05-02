@@ -1,3 +1,10 @@
+<p align="center">
+  <img src="https://img.shields.io/github/issues/supersonic1999/zombieinvasion" alt="issues open"/>
+  <img src="https://img.shields.io/github/license/supersonic1999/zombieinvasion" alt="license GPL"/></a>
+  <img src="https://img.shields.io/github/last-commit/supersonic1999/zombieinvasion" alt="last commit"/>
+</p>
+
+
 # Zombie Invasion Mod
 > Garry's Mod Workshop Addon.
 

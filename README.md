@@ -4,20 +4,22 @@
   <img src="https://img.shields.io/github/last-commit/supersonic1999/zombieinvasion" alt="last commit"/>
 </p>
 
-
 # Zombie Invasion Mod
 > Garry's Mod Workshop Addon.
+<p align="center">
+  <img width="40%"src="https://github.com/supersonic1999/ZombieInvasion/blob/master/header.jpg" alt="Material Bread logo">
+</p>
 
-This addon will constantly spawn random NPC within a certain distance of any player.
+This addon will spawn a random NPC selected from the spawn list within a certain distance of any player. This list can be edited by the super admin of the server or is run in singleplayer, the user.
 I made this because I couldnt find any addons/gamemodes that did this without manually placing NPC spawners everywhere which is stupid.
 
 Not only zombies can be spawned, but any class that works normally in the game, what spawns can all be changed via the 'Spawn Editor' in the Q menu options.
 
-![](header.jpg)
-
 ## Usage example
 
-You can change all of the settings via the spawn menu (Q) under options on the right side.
+Install via: https://steamcommunity.com/sharedfiles/filedetails/?id=179517028
+
+Once in-game, you can change all of the settings via the spawn menu (Q) under options on the right side.
 
 To enable the console, go options>keyboard>advanced>enable developer console, then press ¬, the button above tab. Then type some of the commands below:
 

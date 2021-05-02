@@ -2,13 +2,21 @@
   <img src="https://img.shields.io/github/issues/supersonic1999/zombieinvasion" alt="issues open"/>
   <img src="https://img.shields.io/github/license/supersonic1999/zombieinvasion" alt="license GPL"/></a>
   <img src="https://img.shields.io/github/last-commit/supersonic1999/zombieinvasion" alt="last commit"/>
+  <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=179517028" rel="nofollow">
+      <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fshieldsio-steam-workshop.jross.me%2F179517028%2Fsubscriptions-text" alt="current subscribers"/>
+  </a>
+
+  
+  
 </p>
 
-# Zombie Invasion Mod
-> Garry's Mod Workshop Addon.
 <p align="center">
   <img width="40%"src="https://github.com/supersonic1999/ZombieInvasion/blob/master/header.jpg" alt="Material Bread logo">
 </p>
+
+<h1 align="center">Zombie Invasion Mod</h1>
+
+> Garry's Mod steam workshop addon.
 
 This addon will spawn a random NPC selected from the spawn list within a certain distance of any player. This list can be edited by the super admin of the server or is run in singleplayer, the user.
 I made this because I couldnt find any addons/gamemodes that did this without manually placing NPC spawners everywhere which is stupid.

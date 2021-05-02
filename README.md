@@ -1,4 +1,4 @@
-# Product Name
+# Zombie Invasion Mod
 > Garry's Mod Workshop Addon.
 
 This addon will constantly spawn random NPC within a certain distance of any player.
@@ -6,7 +6,7 @@ I made this because I couldnt find any addons/gamemodes that did this without ma
 
 Not only zombies can be spawned, but any class that works normally in the game, what spawns can all be changed via the 'Spawn Editor' in the Q menu options.
 
-![](header.png)
+![](header.jpeg)
 
 ## Usage example
 

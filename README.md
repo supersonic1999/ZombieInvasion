@@ -50,7 +50,7 @@ Types of NPC that spawn and information about them can be changed via spawn menu
 
 ## Meta
 
-Distributed under the XYZ license. See ``LICENSE`` for more information.
+Distributed under the GPL license. See ``LICENSE`` for more information.
 
 [https://github.com/supersonic1999](https://github.com/supersonic1999/)
 

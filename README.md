@@ -6,7 +6,7 @@ I made this because I couldnt find any addons/gamemodes that did this without ma
 
 Not only zombies can be spawned, but any class that works normally in the game, what spawns can all be changed via the 'Spawn Editor' in the Q menu options.
 
-![](header.jpeg)
+![](header.jpg)
 
 ## Usage example
 
